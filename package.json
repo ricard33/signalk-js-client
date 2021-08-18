@@ -1,5 +1,5 @@
 {
-  "name": "@signalk/client",
+  "name": "@bluenav/signalk-client",
   "version": "2.1.7",
   "description": "A Javascript SDK for Signal K clients. Provides various abstract interfaces for discovering (via optional mDNS) the Signal K server and communication via WebSocket & REST. Aims to implement all major APIs in the most recent Signal K version(s)",
   "main": "index.js",
@@ -9,8 +9,8 @@
     "dist": "./node_modules/.bin/babel src -d dist",
     "prepublishOnly": "npm run dist",
     "preversion": "npm test",
-    "push": "npm publish --access public --scope @signalk .",
-    "create-release": "github-create-release --owner signalk --repository signalk-js-client",
+    "push": "npm publish --access public --scope @bluenav .",
+    "create-release": "github-create-release --owner ricard33 --repository signalk-js-client",
     "release": "git tag -d v$npm_package_version && git tag v$npm_package_version && git push --tags && git push && npm run create-release"
   },
   "keywords": [
@@ -39,11 +39,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SignalK/signalk-js-client"
+    "url": "https://github.com/ricard33/signalk-js-client"
   },
-  "homepage": "https://github.com/SignalK/signalk-js-client",
+  "homepage": "https://github.com/ricard33/signalk-js-client",
   "bugs": {
-    "url": "https://github.com/SignalK/signalk-js-client/issues"
+    "url": "https://github.com/ricard33/signalk-js-client/issues"
   },
   "standard": {
     "globals": [
