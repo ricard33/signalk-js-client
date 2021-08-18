@@ -1,17 +1,21 @@
 "use strict";
 
-require("core-js/modules/es.promise");
-
-require("core-js/modules/es.string.includes");
-
-require("core-js/modules/es.string.replace");
-
-require("core-js/modules/es.string.trim");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.SUPPORTED_STREAM_BEHAVIOUR = void 0;
+exports.default = exports.SUPPORTED_SEND_META = exports.SUPPORTED_STREAM_BEHAVIOUR = void 0;
+
+require("core-js/modules/es.string.trim.js");
+
+require("core-js/modules/es.promise.js");
+
+require("core-js/modules/es.string.includes.js");
+
+require("core-js/modules/es.regexp.exec.js");
+
+require("core-js/modules/es.string.replace.js");
+
+require("core-js/modules/es.array.reduce.js");
 
 var _eventemitter = _interopRequireDefault(require("eventemitter3"));
 
@@ -25,7 +29,7 @@ var _https = _interopRequireDefault(require("https"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -39,6 +43,10 @@ const SUPPORTED_STREAM_BEHAVIOUR = {
   none: 'none'
 };
 exports.SUPPORTED_STREAM_BEHAVIOUR = SUPPORTED_STREAM_BEHAVIOUR;
+const SUPPORTED_SEND_META = {
+  all: 'all'
+};
+exports.SUPPORTED_SEND_META = SUPPORTED_SEND_META;
 
 class Connection extends _eventemitter.default {
   constructor(options) {
@@ -105,7 +113,8 @@ class Connection extends _eventemitter.default {
       hostname,
       port,
       version,
-      deltaStreamBehaviour
+      deltaStreamBehaviour,
+      sendMeta
     } = this.options;
     let uri = useTLS === true ? "".concat(protocol, "s://") : "".concat(protocol, "://");
     uri += hostname;
@@ -115,9 +124,18 @@ class Connection extends _eventemitter.default {
 
     if (protocol === 'ws') {
       uri += '/stream';
+      const params = [];
 
       if (deltaStreamBehaviour && SUPPORTED_STREAM_BEHAVIOUR.hasOwnProperty(deltaStreamBehaviour) && SUPPORTED_STREAM_BEHAVIOUR[deltaStreamBehaviour] !== '') {
-        uri += "?subscribe=".concat(SUPPORTED_STREAM_BEHAVIOUR[deltaStreamBehaviour]);
+        params.push("subscribe=".concat(SUPPORTED_STREAM_BEHAVIOUR[deltaStreamBehaviour]));
+      }
+
+      if (sendMeta && SUPPORTED_SEND_META.hasOwnProperty(sendMeta) && SUPPORTED_SEND_META[sendMeta] !== '') {
+        params.push("sendMeta=".concat(SUPPORTED_SEND_META[sendMeta]));
+      }
+
+      if (params) {
+        uri += '?' + params.join('&');
       }
     }
 
